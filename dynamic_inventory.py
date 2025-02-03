@@ -1,5 +1,6 @@
 
 import json
+import sys
 
 
 inventory = {
@@ -17,5 +18,9 @@ inventory = {
     }
 }
 
-print(json.dumps(inventory))
+if len(sys.argv) == 2 and sys.argv[1]== "~list":
+   print(json.dumps(inventory)) 
+   sys.exit(0)
 
+print(json.dumps(inventory))
+sys.exit(1)

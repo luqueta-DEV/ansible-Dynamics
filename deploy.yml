@@ -1,17 +1,33 @@
-- name: Deploy Apache Web Server
-  hosts: webservers
+- name: Configurar Servidores
+  hosts: all
   become: yes
   tasks:
-    - name: Install Apache
+    - name: Atualizar pacotes
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Instalar Apache em Web Servers
       ansible.builtin.apt:
         name: apache2
         state: present
+      when: "'webservers' in group_names"
 
-    - name: Start Apache Service
+    - name: Instalar MySQL em Database Servers
+      ansible.builtin.apt:
+        name: mysql-server
+        state: present
+      when: "'dbservers' in group_names"
+
+    - name: Iniciar Apache
       ansible.builtin.service:
         name: apache2
         state: started
         enabled: yes
+      when: "'webservers' in group_names"
 
-
-
+    - name: Iniciar MySQL
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: yes
+      when: "'dbservers' in group_names"
